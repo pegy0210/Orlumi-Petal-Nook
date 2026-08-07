@@ -1,0 +1,20 @@
+# Godot 4+
+.godot/
+
+# Exported builds
+builds/
+*.apk
+*.aab
+*.exe
+*.app
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local secrets / signing
+*.keystore
+*.jks
+*.env
