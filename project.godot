@@ -1,0 +1,31 @@
+; Engine configuration file.
+; Orlumi: Petal Nook — production Godot project
+config_version=5
+
+[application]
+
+config/name="Orlumi: Petal Nook"
+run/main_scene="res://game/scenes/boot/boot.tscn"
+config/features=PackedStringArray("4.3")
+
+[autoload]
+
+GameState="*res://game/autoload/game_state.gd"
+EconomyService="*res://game/autoload/economy_service.gd"
+SaveService="*res://game/autoload/save_service.gd"
+OfflineService="*res://game/autoload/offline_service.gd"
+
+[display]
+
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/size/window_width_override=540
+window/size/window_height_override=960
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.952941, 0.929412, 0.890196, 1)
