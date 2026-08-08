@@ -94,12 +94,21 @@ offset_bottom = 298.0
 theme_override_font_sizes/font_size = 24
 text = "Settings"
 
+[node name="OfflineBoostButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 316.0
+offset_right = 1024.0
+offset_bottom = 386.0
+theme_override_font_sizes/font_size = 22
+text = "Offline +15m"
+
 [node name="DevNote" type="Label" parent="."]
 layout_mode = 0
 offset_left = 48.0
-offset_top = 380.0
+offset_top = 400.0
 offset_right = 760.0
-offset_bottom = 430.0
+offset_bottom = 450.0
 theme_override_colors/font_color = Color(0.529412, 0.435294, 0.352941, 1)
 theme_override_font_sizes/font_size = 21
 text = "Developer layout — approved art will replace placeholders."
