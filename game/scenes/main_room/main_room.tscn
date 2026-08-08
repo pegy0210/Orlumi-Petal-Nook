@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/main_room/main_room.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/story_overlay.tscn" id="2_story"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://game/scenes/companions/lumie.tscn" id="4_lumie"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/settings_panel.tscn" id="5_settings"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/photo_mode_ui.tscn" id="6_photo"]
+[ext_resource type="PackedScene" path="res://game/scenes/visuals/furniture_visual.tscn" id="7_furniture"]
 
 [node name="MainRoom" type="Control"]
 layout_mode = 3
@@ -16,7 +17,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Base" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BackgroundFallback" type="ColorRect" parent="Base"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -26,7 +36,85 @@ grow_vertical = 2
 color = Color(0.952941, 0.929412, 0.890196, 1)
 mouse_filter = 2
 
-[node name="Header" type="Label" parent="."]
+[node name="BackgroundTexture" type="TextureRect" parent="Base"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Furniture" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Curtain" parent="Furniture" instance=ExtResource("7_furniture")]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 565.0
+offset_right = 465.0
+offset_bottom = 825.0
+item_id = "curtain"
+fallback_name = "Curtain"
+
+[node name="WoodenRack" parent="Furniture" instance=ExtResource("7_furniture")]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 790.0
+offset_right = 880.0
+offset_bottom = 1210.0
+item_id = "wooden_rack"
+fallback_name = "Wooden Rack"
+
+[node name="LittlePot" parent="Furniture" instance=ExtResource("7_furniture")]
+layout_mode = 0
+offset_left = 385.0
+offset_top = 1135.0
+offset_right = 665.0
+offset_bottom = 1415.0
+item_id = "little_pot"
+fallback_name = "Little Pot"
+interactive = true
+
+[node name="SmallTable" parent="Furniture" instance=ExtResource("7_furniture")]
+layout_mode = 0
+offset_left = 700.0
+offset_top = 1190.0
+offset_right = 1000.0
+offset_bottom = 1490.0
+item_id = "small_table"
+fallback_name = "Small Table"
+
+[node name="Companions" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Lumie" parent="Companions" instance=ExtResource("4_lumie")]
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Header" type="Label" parent="UI"]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 42.0
@@ -36,7 +124,7 @@ theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 1)
 theme_override_font_sizes/font_size = 32
 text = "ORLUMI: PETAL NOOK"
 
-[node name="ResourceUI" type="VBoxContainer" parent="."]
+[node name="ResourceUI" type="VBoxContainer" parent="UI"]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 118.0
@@ -44,31 +132,31 @@ offset_right = 440.0
 offset_bottom = 330.0
 theme_override_constants/separation = 10
 
-[node name="Petals" type="Label" parent="ResourceUI"]
+[node name="Petals" type="Label" parent="UI/ResourceUI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 1)
 theme_override_font_sizes/font_size = 30
 text = "Petals: 0"
 
-[node name="Income" type="Label" parent="ResourceUI"]
+[node name="Income" type="Label" parent="UI/ResourceUI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 1)
 theme_override_font_sizes/font_size = 25
 text = "Income: 1.0/s"
 
-[node name="Comfort" type="Label" parent="ResourceUI"]
+[node name="Comfort" type="Label" parent="UI/ResourceUI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 1)
 theme_override_font_sizes/font_size = 25
 text = "Comfort: 2"
 
-[node name="OfflineCap" type="Label" parent="ResourceUI"]
+[node name="OfflineCap" type="Label" parent="UI/ResourceUI"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 1)
 theme_override_font_sizes/font_size = 25
 text = "Offline Limit: 60 min"
 
-[node name="SaveButton" type="Button" parent="."]
+[node name="SaveButton" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = 820.0
 offset_top = 52.0
@@ -77,7 +165,7 @@ offset_bottom = 122.0
 theme_override_font_sizes/font_size = 24
 text = "Save"
 
-[node name="ShopButton" type="Button" parent="."]
+[node name="ShopButton" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = 820.0
 offset_top = 140.0
@@ -86,7 +174,7 @@ offset_bottom = 210.0
 theme_override_font_sizes/font_size = 24
 text = "Shop"
 
-[node name="SettingsButton" type="Button" parent="."]
+[node name="SettingsButton" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = 820.0
 offset_top = 228.0
@@ -95,7 +183,7 @@ offset_bottom = 298.0
 theme_override_font_sizes/font_size = 24
 text = "Settings"
 
-[node name="OfflineBoostButton" type="Button" parent="."]
+[node name="OfflineBoostButton" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = 760.0
 offset_top = 316.0
@@ -104,7 +192,7 @@ offset_bottom = 386.0
 theme_override_font_sizes/font_size = 22
 text = "Offline +15m"
 
-[node name="PhotoButton" type="Button" parent="."]
+[node name="PhotoButton" type="Button" parent="UI"]
 layout_mode = 0
 offset_left = 820.0
 offset_top = 404.0
@@ -113,7 +201,7 @@ offset_bottom = 474.0
 theme_override_font_sizes/font_size = 24
 text = "Photo"
 
-[node name="DevNote" type="Label" parent="."]
+[node name="DevNote" type="Label" parent="UI"]
 layout_mode = 0
 offset_left = 48.0
 offset_top = 500.0
@@ -121,56 +209,9 @@ offset_right = 760.0
 offset_bottom = 550.0
 theme_override_colors/font_color = Color(0.529412, 0.435294, 0.352941, 1)
 theme_override_font_sizes/font_size = 21
-text = "Developer layout — approved art will replace placeholders."
+text = "Developer visual fallback — approved assets load automatically."
 
-[node name="LittlePotButton" type="Button" parent="."]
-layout_mode = 0
-offset_left = 350.0
-offset_top = 1160.0
-offset_right = 730.0
-offset_bottom = 1450.0
-theme_override_font_sizes/font_size = 34
-text = "Little Pot\nTap ✦"
-
-[node name="CurtainPlaceholder" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 120.0
-offset_top = 600.0
-offset_right = 430.0
-offset_bottom = 675.0
-theme_override_colors/font_color = Color(0.65098, 0.533333, 0.517647, 1)
-theme_override_font_sizes/font_size = 26
-text = "Curtain"
-horizontal_alignment = 1
-
-[node name="WoodenRackPlaceholder" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 590.0
-offset_top = 880.0
-offset_right = 860.0
-offset_bottom = 955.0
-theme_override_colors/font_color = Color(0.662745, 0.529412, 0.415686, 1)
-theme_override_font_sizes/font_size = 26
-text = "Wooden Rack"
-horizontal_alignment = 1
-
-[node name="SmallTablePlaceholder" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 700.0
-offset_top = 1240.0
-offset_right = 980.0
-offset_bottom = 1315.0
-theme_override_colors/font_color = Color(0.662745, 0.529412, 0.415686, 1)
-theme_override_font_sizes/font_size = 26
-text = "Small Table"
-horizontal_alignment = 1
-
-[node name="Lumie" parent="." instance=ExtResource("4_lumie")]
-
-[node name="Status" type="Label" parent="."]
+[node name="Status" type="Label" parent="UI"]
 layout_mode = 0
 offset_left = 300.0
 offset_top = 1510.0
@@ -180,10 +221,19 @@ theme_override_colors/font_color = Color(0.529412, 0.435294, 0.352941, 1)
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 
-[node name="ShopPanel" parent="." instance=ExtResource("3_shop")]
-[node name="SettingsPanel" parent="." instance=ExtResource("5_settings")]
+[node name="Overlay" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
-[node name="OfflinePopup" type="Panel" parent="."]
+[node name="ShopPanel" parent="Overlay" instance=ExtResource("3_shop")]
+[node name="SettingsPanel" parent="Overlay" instance=ExtResource("5_settings")]
+
+[node name="OfflinePopup" type="Panel" parent="Overlay"]
 visible = false
 layout_mode = 0
 offset_left = 150.0
@@ -191,7 +241,7 @@ offset_top = 650.0
 offset_right = 930.0
 offset_bottom = 1070.0
 
-[node name="Title" type="Label" parent="OfflinePopup"]
+[node name="Title" type="Label" parent="Overlay/OfflinePopup"]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 45.0
@@ -201,7 +251,7 @@ theme_override_font_sizes/font_size = 30
 text = "Welcome back"
 horizontal_alignment = 1
 
-[node name="Reward" type="Label" parent="OfflinePopup"]
+[node name="Reward" type="Label" parent="Overlay/OfflinePopup"]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 145.0
@@ -211,7 +261,7 @@ theme_override_font_sizes/font_size = 24
 text = "Offline reward"
 horizontal_alignment = 1
 
-[node name="Claim" type="Button" parent="OfflinePopup"]
+[node name="Claim" type="Button" parent="Overlay/OfflinePopup"]
 layout_mode = 0
 offset_left = 230.0
 offset_top = 285.0
@@ -220,5 +270,5 @@ offset_bottom = 360.0
 theme_override_font_sizes/font_size = 25
 text = "Claim"
 
-[node name="PhotoModeUI" parent="." instance=ExtResource("6_photo")]
-[node name="StoryOverlay" parent="." instance=ExtResource("2_story")]
+[node name="PhotoModeUI" parent="Overlay" instance=ExtResource("6_photo")]
+[node name="StoryOverlay" parent="Overlay" instance=ExtResource("2_story")]
