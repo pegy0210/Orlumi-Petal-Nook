@@ -68,6 +68,9 @@ func _refresh_unlock_state() -> void:
 	if not GameState.lumie_unlocked:
 		visible = false
 		_stop_all_activity()
+		successful_tap_count = 0
+		if is_node_ready():
+			body_button.text = "Lumie ✦"
 		_set_state(State.LOCKED)
 		return
 
