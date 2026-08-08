@@ -72,7 +72,7 @@ Only the final approved version is copied into the exact production path/name ab
 
 ## Main room background rules
 
-`bg_room_main.png` must contain **environment only**.
+`assets/backgrounds/main_room/bg_room_main.png` is the first M7 approved-art gate and must be an exact **1280 × 2200 PNG** containing **environment only**.
 
 It must not contain:
 
@@ -80,10 +80,11 @@ It must not contain:
 - Wooden Rack
 - Curtain
 - Small Table
-- Lumie
-- lock icon
+- Lumie or another companion
+- lock icon / locked badge
 - gameplay UI
 - Photo Mode controls
+- logo or text
 
 Composition requirements:
 
@@ -92,6 +93,9 @@ Composition requirements:
 - clean top-left UI area
 - active gameplay floor concentrated centre-left / lower-middle
 - right side visually reserved for future Area 2
+- sufficient empty floor for separate Godot furniture sprites and Lumie movement
+
+Full acceptance criteria: `docs/production/M7-bgroom-gate.md`.
 
 ## Lumie non-negotiable identity rules
 
@@ -103,3 +107,7 @@ Approved Lumie art must retain:
 - creamy white, pastel lavender, blush pink and pale gold palette
 
 Do not replace these identity features with generic bunny styling.
+
+## Automatic validation
+
+`tools/validate_assets.py` checks final-path production assets that are present. Missing future assets are treated as pending; an invalid final-path asset fails GitHub CI.
