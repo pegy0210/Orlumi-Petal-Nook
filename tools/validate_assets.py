@@ -14,12 +14,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Final approved v1 production contracts.
+# Final approved v1 production contracts. These paths mirror VisualAssetService.
 PNG_CONTRACTS = {
-    "assets/backgrounds/bg_room_main.png": (1280, 2200),
-    "assets/companions/lumie_normal.png": (220, 220),
-    "assets/companions/lumie_annoyed.png": (220, 220),
-    "assets/companions/lumie_shadow.png": (180, 80),
+    "assets/backgrounds/main_room/bg_room_main.png": (1280, 2200),
+    "assets/companions/lumie/lumie_normal.png": (220, 220),
+    "assets/companions/lumie/lumie_annoyed.png": (220, 220),
+    "assets/companions/lumie/lumie_shadow.png": (180, 80),
     "assets/logos/logo_orlumi_petal_nook.png": (520, 180),
 }
 
