@@ -4,7 +4,8 @@ signal exit_requested
 signal capture_saved(path: String)
 signal capture_failed
 
-@onready var logo: Label = $Logo
+@onready var logo_texture: TextureRect = $LogoTexture
+@onready var logo_fallback: Label = $LogoFallback
 @onready var capture_button: Button = $Capture
 @onready var exit_button: Button = $Exit
 
@@ -16,13 +17,23 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	capture_button.pressed.connect(_on_capture_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
+	_refresh_logo()
+
+
+func _refresh_logo() -> void:
+	var texture := VisualAssetService.get_photo_logo()
+	logo_texture.texture = texture
+	logo_texture.visible = texture != null
+	logo_fallback.visible = texture == null
 
 
 func open_mode() -> void:
 	capture_in_progress = false
 	capture_button.visible = true
 	exit_button.visible = true
-	logo.visible = true
+	_refresh_logo()
+	logo_texture.visible = logo_texture.texture != null
+	logo_fallback.visible = logo_texture.texture == null
 	visible = true
 
 
