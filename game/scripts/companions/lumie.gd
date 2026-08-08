@@ -26,6 +26,9 @@ const ANNOYED_SECONDS := 30.0
 @export var min_cooldown_seconds := 1.0
 @export var max_cooldown_seconds := 2.0
 
+@onready var shadow_texture: TextureRect = $ShadowTexture
+@onready var body_texture: TextureRect = $BodyTexture
+@onready var fallback_label: Label = $FallbackLabel
 @onready var body_button: Button = $BodyButton
 @onready var emoji_label: Label = $Emoji
 @onready var move_timer: Timer = $MoveTimer
@@ -69,17 +72,31 @@ func _refresh_unlock_state() -> void:
 		visible = false
 		_stop_all_activity()
 		successful_tap_count = 0
-		if is_node_ready():
-			body_button.text = "Lumie ✦"
 		_set_state(State.LOCKED)
 		return
 
+	visible = true
 	if current_state == State.LOCKED:
-		visible = true
+		_apply_visual_state("normal")
 		_set_state(State.IDLE)
 		_schedule_next_move()
+
+
+func _apply_visual_state(state_name: String) -> void:
+	if not is_node_ready():
+		return
+	var texture := VisualAssetService.get_companion_texture("lumie", state_name)
+	body_texture.texture = texture
+	body_texture.visible = texture != null
+	fallback_label.visible = texture == null
+	if state_name == "annoyed":
+		fallback_label.text = "Lumie\n(annoyed)"
 	else:
-		visible = true
+		fallback_label.text = "Lumie ✦"
+
+	var shadow := VisualAssetService.get_companion_shadow("lumie")
+	shadow_texture.texture = shadow
+	shadow_texture.visible = shadow != null
 
 
 func _on_body_pressed() -> void:
@@ -142,7 +159,7 @@ func _enter_annoyed() -> void:
 	cooldown_timer.stop()
 	_stop_move_tween()
 	_set_state(State.ANNOYED)
-	body_button.text = "Lumie\n(annoyed)"
+	_apply_visual_state("annoyed")
 	if _rng.randf() < 0.5:
 		emoji_label.text = "😠"
 		emoji_label.visible = true
@@ -157,7 +174,7 @@ func _on_annoyed_timer_timeout() -> void:
 		return
 	successful_tap_count = 0
 	emoji_label.visible = false
-	body_button.text = "Lumie ✦"
+	_apply_visual_state("normal")
 	_set_state(State.IDLE)
 	annoyed_ended.emit()
 	_schedule_next_move()
