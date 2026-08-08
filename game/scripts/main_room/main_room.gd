@@ -14,31 +14,28 @@ const LUMIE_INTRO_LINES: Array[String] = [
 	"Its name is Lumie."
 ]
 
-@onready var header: Label = $Header
-@onready var resource_ui: VBoxContainer = $ResourceUI
-@onready var petals_label: Label = $ResourceUI/Petals
-@onready var income_label: Label = $ResourceUI/Income
-@onready var comfort_label: Label = $ResourceUI/Comfort
-@onready var offline_cap_label: Label = $ResourceUI/OfflineCap
-@onready var little_pot_button: Button = $LittlePotButton
-@onready var wooden_rack_placeholder: Label = $WoodenRackPlaceholder
-@onready var curtain_placeholder: Label = $CurtainPlaceholder
-@onready var small_table_placeholder: Label = $SmallTablePlaceholder
-@onready var lumie = $Lumie
-@onready var status_label: Label = $Status
-@onready var dev_note: Label = $DevNote
-@onready var save_button: Button = $SaveButton
-@onready var shop_button: Button = $ShopButton
-@onready var settings_button: Button = $SettingsButton
-@onready var offline_boost_button: Button = $OfflineBoostButton
-@onready var photo_button: Button = $PhotoButton
-@onready var shop_panel = $ShopPanel
-@onready var settings_panel = $SettingsPanel
-@onready var offline_popup: Panel = $OfflinePopup
-@onready var offline_reward_label: Label = $OfflinePopup/Reward
-@onready var offline_claim_button: Button = $OfflinePopup/Claim
-@onready var photo_mode_ui = $PhotoModeUI
-@onready var story_overlay = $StoryOverlay
+@onready var background_fallback: ColorRect = $Base/BackgroundFallback
+@onready var background_texture: TextureRect = $Base/BackgroundTexture
+@onready var little_pot_visual = $Furniture/LittlePot
+@onready var lumie = $Companions/Lumie
+@onready var ui_layer: Control = $UI
+@onready var petals_label: Label = $UI/ResourceUI/Petals
+@onready var income_label: Label = $UI/ResourceUI/Income
+@onready var comfort_label: Label = $UI/ResourceUI/Comfort
+@onready var offline_cap_label: Label = $UI/ResourceUI/OfflineCap
+@onready var status_label: Label = $UI/Status
+@onready var save_button: Button = $UI/SaveButton
+@onready var shop_button: Button = $UI/ShopButton
+@onready var settings_button: Button = $UI/SettingsButton
+@onready var offline_boost_button: Button = $UI/OfflineBoostButton
+@onready var photo_button: Button = $UI/PhotoButton
+@onready var shop_panel = $Overlay/ShopPanel
+@onready var settings_panel = $Overlay/SettingsPanel
+@onready var offline_popup: Panel = $Overlay/OfflinePopup
+@onready var offline_reward_label: Label = $Overlay/OfflinePopup/Reward
+@onready var offline_claim_button: Button = $Overlay/OfflinePopup/Claim
+@onready var photo_mode_ui = $Overlay/PhotoModeUI
+@onready var story_overlay = $Overlay/StoryOverlay
 
 var photo_mode_active: bool = false
 var _photo_result_message: String = ""
@@ -50,7 +47,7 @@ func _ready() -> void:
 	EconomyService.purchase_failed.connect(_on_purchase_failed)
 	RewardedAdService.reward_granted.connect(_on_rewarded_ad_granted)
 	RewardedAdService.reward_unavailable.connect(_on_rewarded_ad_unavailable)
-	little_pot_button.pressed.connect(_on_little_pot_pressed)
+	little_pot_visual.tapped.connect(_on_little_pot_pressed)
 	save_button.pressed.connect(_on_save_pressed)
 	shop_button.pressed.connect(_on_shop_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
@@ -67,10 +64,18 @@ func _ready() -> void:
 	lumie.reaction_started.connect(_on_lumie_reaction_started)
 	lumie.annoyed_started.connect(_on_lumie_annoyed_started)
 	lumie.annoyed_ended.connect(_on_lumie_annoyed_ended)
+	_refresh_visual_assets()
 	_refresh_ui()
 	_prepare_offline_popup()
 	_update_modal_input_state()
 	call_deferred("_start_opening_if_needed")
+
+
+func _refresh_visual_assets() -> void:
+	var room_texture := VisualAssetService.get_main_room_background()
+	background_texture.texture = room_texture
+	background_texture.visible = room_texture != null
+	background_fallback.visible = room_texture == null
 
 
 func _refresh_ui() -> void:
@@ -78,9 +83,6 @@ func _refresh_ui() -> void:
 	income_label.text = "Income: %.1f/s" % GameState.final_income_per_sec
 	comfort_label.text = "Comfort: %d" % GameState.comfort
 	offline_cap_label.text = "Offline Limit: %d min" % GameState.offline_cap_minutes
-	wooden_rack_placeholder.visible = GameState.wooden_rack_level >= 1
-	curtain_placeholder.visible = GameState.curtain_level >= 1
-	small_table_placeholder.visible = GameState.small_table_level >= 1
 	if GameState.offline_cap_minutes >= 120:
 		offline_boost_button.text = "Offline MAX"
 	else:
@@ -131,7 +133,7 @@ func _update_modal_input_state() -> void:
 	if not is_node_ready():
 		return
 	if photo_mode_active:
-		little_pot_button.disabled = true
+		little_pot_visual.set_interaction_enabled(false)
 		save_button.disabled = true
 		shop_button.disabled = true
 		settings_button.disabled = true
@@ -141,7 +143,7 @@ func _update_modal_input_state() -> void:
 		return
 
 	var blocked := _is_modal_open()
-	little_pot_button.disabled = blocked
+	little_pot_visual.set_interaction_enabled(not blocked)
 	save_button.disabled = blocked
 	shop_button.disabled = blocked
 	settings_button.disabled = blocked
@@ -151,15 +153,7 @@ func _update_modal_input_state() -> void:
 
 
 func _set_standard_ui_visible(value: bool) -> void:
-	header.visible = value
-	resource_ui.visible = value
-	save_button.visible = value
-	shop_button.visible = value
-	settings_button.visible = value
-	offline_boost_button.visible = value
-	photo_button.visible = value
-	status_label.visible = value
-	dev_note.visible = value
+	ui_layer.visible = value
 
 
 func _on_little_pot_pressed() -> void:
