@@ -102,6 +102,42 @@ offset_bottom = 1450.0
 theme_override_font_sizes/font_size = 34
 text = "Little Pot\nTap ✦"
 
+[node name="CurtainPlaceholder" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 120.0
+offset_top = 600.0
+offset_right = 430.0
+offset_bottom = 675.0
+theme_override_colors/font_color = Color(0.65098, 0.533333, 0.517647, 1)
+theme_override_font_sizes/font_size = 26
+text = "Curtain"
+horizontal_alignment = 1
+
+[node name="WoodenRackPlaceholder" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 590.0
+offset_top = 880.0
+offset_right = 860.0
+offset_bottom = 955.0
+theme_override_colors/font_color = Color(0.662745, 0.529412, 0.415686, 1)
+theme_override_font_sizes/font_size = 26
+text = "Wooden Rack"
+horizontal_alignment = 1
+
+[node name="SmallTablePlaceholder" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 700.0
+offset_top = 1240.0
+offset_right = 980.0
+offset_bottom = 1315.0
+theme_override_colors/font_color = Color(0.662745, 0.529412, 0.415686, 1)
+theme_override_font_sizes/font_size = 26
+text = "Small Table"
+horizontal_alignment = 1
+
 [node name="LumiePlaceholder" type="Label" parent="."]
 visible = false
 layout_mode = 0
