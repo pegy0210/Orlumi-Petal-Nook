@@ -1,5 +1,6 @@
 extends Node
 
+signal reward_requested(reward_id: String)
 signal reward_granted(reward_id: String)
 signal reward_unavailable(reward_id: String)
 
@@ -29,8 +30,9 @@ func request_reward(reward_id: String) -> bool:
 		reward_unavailable.emit(reward_id)
 		return false
 
-	# The future Android provider adapter starts the rewarded ad here.
-	# Reward is granted only after that adapter calls notify_rewarded_ad_completed().
+	# A future Android ad adapter listens for this request, opens the rewarded ad,
+	# and calls notify_rewarded_ad_completed() only after a genuine reward event.
+	reward_requested.emit(reward_id)
 	return true
 
 
