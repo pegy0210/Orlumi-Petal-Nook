@@ -19,6 +19,9 @@ const LUMIE_INTRO_LINES: Array[String] = [
 @onready var comfort_label: Label = $ResourceUI/Comfort
 @onready var offline_cap_label: Label = $ResourceUI/OfflineCap
 @onready var little_pot_button: Button = $LittlePotButton
+@onready var wooden_rack_placeholder: Label = $WoodenRackPlaceholder
+@onready var curtain_placeholder: Label = $CurtainPlaceholder
+@onready var small_table_placeholder: Label = $SmallTablePlaceholder
 @onready var lumie_placeholder: Label = $LumiePlaceholder
 @onready var status_label: Label = $Status
 @onready var save_button: Button = $SaveButton
@@ -49,6 +52,9 @@ func _refresh_ui() -> void:
 	income_label.text = "Income: %.1f/s" % GameState.final_income_per_sec
 	comfort_label.text = "Comfort: %d" % GameState.comfort
 	offline_cap_label.text = "Offline Limit: %d min" % GameState.offline_cap_minutes
+	wooden_rack_placeholder.visible = GameState.wooden_rack_level >= 1
+	curtain_placeholder.visible = GameState.curtain_level >= 1
+	small_table_placeholder.visible = GameState.small_table_level >= 1
 	lumie_placeholder.visible = GameState.lumie_unlocked
 
 
