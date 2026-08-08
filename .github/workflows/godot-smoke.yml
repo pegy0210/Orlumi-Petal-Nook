@@ -19,6 +19,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validate production asset contracts
+        run: python3 tools/validate_assets.py
+
       - name: Install Godot 4.3 stable
         run: |
           curl -L --fail -o godot.zip https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
