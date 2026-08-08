@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/main_room/main_room.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/story_overlay.tscn" id="2_story"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/shop_panel.tscn" id="3_shop"]
 [ext_resource type="PackedScene" path="res://game/scenes/companions/lumie.tscn" id="4_lumie"]
+[ext_resource type="PackedScene" path="res://game/scenes/ui/settings_panel.tscn" id="5_settings"]
 
 [node name="MainRoom" type="Control"]
 layout_mode = 3
@@ -84,6 +85,15 @@ offset_bottom = 210.0
 theme_override_font_sizes/font_size = 24
 text = "Shop"
 
+[node name="SettingsButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 820.0
+offset_top = 228.0
+offset_right = 1024.0
+offset_bottom = 298.0
+theme_override_font_sizes/font_size = 24
+text = "Settings"
+
 [node name="DevNote" type="Label" parent="."]
 layout_mode = 0
 offset_left = 48.0
@@ -152,6 +162,7 @@ theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
 
 [node name="ShopPanel" parent="." instance=ExtResource("3_shop")]
+[node name="SettingsPanel" parent="." instance=ExtResource("5_settings")]
 
 [node name="OfflinePopup" type="Panel" parent="."]
 visible = false
