@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://game/scripts/ui/story_overlay.gd" id="1_story"]
+
+[node name="StoryOverlay" type="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+script = ExtResource("1_story")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 150.0
+offset_top = 650.0
+offset_right = 930.0
+offset_bottom = 1240.0
+theme_override_constants/separation = 48
+
+[node name="StoryLine" type="Label" parent="Content"]
+custom_minimum_size = Vector2(0, 260)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 1)
+theme_override_font_sizes/font_size = 36
+text = "Story"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Continue" type="Button" parent="Content"]
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Tap to continue"
