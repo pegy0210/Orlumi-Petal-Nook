@@ -14,6 +14,7 @@ GameState="*res://game/autoload/game_state.gd"
 EconomyService="*res://game/autoload/economy_service.gd"
 SaveService="*res://game/autoload/save_service.gd"
 OfflineService="*res://game/autoload/offline_service.gd"
+RewardedAdService="*res://game/autoload/rewarded_ad_service.gd"
 
 [display]
 
