@@ -1,0 +1,138 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://game/scripts/ui/settings_panel.gd" id="1_settings"]
+
+[node name="SettingsPanel" type="Panel"]
+visible = false
+layout_mode = 0
+offset_left = 130.0
+offset_top = 480.0
+offset_right = 950.0
+offset_bottom = 1420.0
+script = ExtResource("1_settings")
+
+[node name="Content" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="Control" parent="Content"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 30.0
+offset_right = 780.0
+offset_bottom = 110.0
+
+[node name="Title" type="Label" parent="Content/TopBar"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 420.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 34
+text = "Settings"
+
+[node name="Close" type="Button" parent="Content/TopBar"]
+layout_mode = 0
+offset_left = 585.0
+offset_top = 0.0
+offset_right = 735.0
+offset_bottom = 64.0
+theme_override_font_sizes/font_size = 22
+text = "Close"
+
+[node name="ResetInfo" type="Label" parent="Content"]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 190.0
+offset_right = 765.0
+offset_bottom = 300.0
+theme_override_font_sizes/font_size = 23
+text = "Restart your nook from the beginning.\nPermanent paid content will be kept."
+autowrap_mode = 2
+
+[node name="ResetGame" type="Button" parent="Content"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 350.0
+offset_right = 640.0
+offset_bottom = 440.0
+theme_override_font_sizes/font_size = 26
+text = "Reset Game"
+
+[node name="FirstConfirm" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 65.0
+offset_top = 210.0
+offset_right = 755.0
+offset_bottom = 660.0
+
+[node name="Message" type="Label" parent="FirstConfirm"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 55.0
+offset_right = 645.0
+offset_bottom = 195.0
+theme_override_font_sizes/font_size = 25
+text = "Restart your nook?\nYour current progress will be cleared."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Cancel" type="Button" parent="FirstConfirm"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 270.0
+offset_right = 290.0
+offset_bottom = 350.0
+theme_override_font_sizes/font_size = 23
+text = "Cancel"
+
+[node name="Continue" type="Button" parent="FirstConfirm"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 270.0
+offset_right = 620.0
+offset_bottom = 350.0
+theme_override_font_sizes/font_size = 23
+text = "Continue"
+
+[node name="FinalConfirm" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 65.0
+offset_top = 210.0
+offset_right = 755.0
+offset_bottom = 660.0
+
+[node name="Message" type="Label" parent="FinalConfirm"]
+layout_mode = 0
+offset_left = 45.0
+offset_top = 55.0
+offset_right = 645.0
+offset_bottom = 195.0
+theme_override_font_sizes/font_size = 25
+text = "Are you sure?\nThis cannot be undone."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Cancel" type="Button" parent="FinalConfirm"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 270.0
+offset_right = 290.0
+offset_bottom = 350.0
+theme_override_font_sizes/font_size = 23
+text = "Cancel"
+
+[node name="Reset" type="Button" parent="FinalConfirm"]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 270.0
+offset_right = 620.0
+offset_bottom = 350.0
+theme_override_font_sizes/font_size = 23
+text = "Reset"
