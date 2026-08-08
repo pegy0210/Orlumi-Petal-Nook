@@ -28,12 +28,16 @@ func claim_pending_reward() -> float:
 		return 0.0
 	var amount := pending_reward
 	GameState.petals += amount
-	pending_seconds = 0
-	pending_reward = 0.0
+	clear_pending_reward()
 	SaveService.save_progress()
 	GameState.state_changed.emit()
 	pending_reward_claimed.emit(amount)
 	return amount
+
+
+func clear_pending_reward() -> void:
+	pending_seconds = 0
+	pending_reward = 0.0
 
 
 func increase_cap_after_rewarded_ad() -> bool:
