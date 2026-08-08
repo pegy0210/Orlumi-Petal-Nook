@@ -1,5 +1,19 @@
 extends Control
 
+const OPENING_LINES: Array[String] = [
+	"Somewhere within Orlumi,",
+	"there is a little house.",
+	"Inside, a flower waits in silence.",
+	"This is where your nook begins."
+]
+
+const LUMIE_INTRO_LINES: Array[String] = [
+	"With the first piece placed,",
+	"the little house stirs softly.",
+	"A tiny companion has drawn near.",
+	"Its name is Lumie."
+]
+
 @onready var petals_label: Label = $ResourceUI/Petals
 @onready var income_label: Label = $ResourceUI/Income
 @onready var comfort_label: Label = $ResourceUI/Comfort
@@ -18,6 +32,7 @@ extends Control
 @onready var offline_popup: Panel = $OfflinePopup
 @onready var offline_reward_label: Label = $OfflinePopup/Reward
 @onready var offline_claim_button: Button = $OfflinePopup/Claim
+@onready var story_overlay = $StoryOverlay
 
 
 func _ready() -> void:
@@ -30,8 +45,10 @@ func _ready() -> void:
 	shop_close_button.pressed.connect(_on_shop_close_pressed)
 	pot_upgrade_button.pressed.connect(_on_pot_upgrade_pressed)
 	offline_claim_button.pressed.connect(_on_offline_claim_pressed)
+	story_overlay.sequence_finished.connect(_on_story_sequence_finished)
 	_refresh_ui()
 	_prepare_offline_popup()
+	call_deferred("_start_opening_if_needed")
 
 
 func _refresh_ui() -> void:
@@ -67,6 +84,21 @@ func _prepare_offline_popup() -> void:
 	offline_popup.visible = true
 
 
+func _start_opening_if_needed() -> void:
+	if GameState.intro_played:
+		return
+	offline_popup.visible = false
+	shop_panel.visible = false
+	story_overlay.start_sequence("opening", OPENING_LINES)
+
+
+func _start_lumie_intro_if_needed() -> void:
+	if not GameState.lumie_unlocked or GameState.lumie_intro_played:
+		return
+	shop_panel.visible = false
+	story_overlay.start_sequence("lumie_intro", LUMIE_INTRO_LINES)
+
+
 func _on_little_pot_pressed() -> void:
 	EconomyService.tap_little_pot()
 	status_label.text = "+%d Petal" % int(GameState.tap_value)
@@ -80,6 +112,8 @@ func _on_save_pressed() -> void:
 
 
 func _on_shop_pressed() -> void:
+	if story_overlay.is_sequence_active():
+		return
 	shop_panel.visible = true
 
 
@@ -95,6 +129,7 @@ func _on_purchase_succeeded(item_id: String, new_level: int) -> void:
 	if item_id == "little_pot":
 		status_label.text = "Little Pot reached Lv.%d ✦" % new_level
 	_refresh_ui()
+	_start_lumie_intro_if_needed()
 
 
 func _on_purchase_failed(_item_id: String, reason: String) -> void:
@@ -109,6 +144,19 @@ func _on_offline_claim_pressed() -> void:
 	status_label.text = "+%d offline Petals" % int(floor(amount))
 	offline_popup.visible = false
 	_refresh_ui()
+
+
+func _on_story_sequence_finished(sequence_id: String) -> void:
+	match sequence_id:
+		"opening":
+			GameState.intro_played = true
+			SaveService.save_progress()
+			GameState.state_changed.emit()
+			_prepare_offline_popup()
+		"lumie_intro":
+			GameState.lumie_intro_played = true
+			SaveService.save_progress()
+			GameState.state_changed.emit()
 
 
 func _notification(what: int) -> void:
