@@ -28,10 +28,19 @@ jobs:
           ./godot --version
 
       - name: Import and parse project
-        run: ./godot --headless --editor --path . --quit
+        run: |
+          set -o pipefail
+          ./godot --headless --editor --path . --quit 2>&1 | tee godot-import.log
+          ! grep -q "ERROR:" godot-import.log
 
       - name: Run core smoke assertions
-        run: ./godot --headless --path . game/tests/smoke_test.tscn
+        run: |
+          set -o pipefail
+          ./godot --headless --path . game/tests/smoke_test.tscn 2>&1 | tee godot-smoke.log
+          ! grep -q "ERROR:" godot-smoke.log
 
       - name: Boot main scene
-        run: ./godot --headless --path . --quit-after 10
+        run: |
+          set -o pipefail
+          ./godot --headless --path . --quit-after 10 2>&1 | tee godot-boot.log
+          ! grep -q "ERROR:" godot-boot.log
