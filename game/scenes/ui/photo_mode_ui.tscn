@@ -13,7 +13,18 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_photo")
 
-[node name="Logo" type="Label" parent="."]
+[node name="LogoTexture" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 280.0
+offset_top = 55.0
+offset_right = 800.0
+offset_bottom = 235.0
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="LogoFallback" type="Label" parent="."]
 layout_mode = 0
 offset_left = 280.0
 offset_top = 70.0
