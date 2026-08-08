@@ -69,7 +69,7 @@ func _refresh_unlock_state() -> void:
 func _on_body_pressed() -> void:
 	if not GameState.lumie_unlocked:
 		return
-	if current_state in [State.REATING if false else State.REACTING, State.COOLDOWN, State.ANNOYED, State.LOCKED]:
+	if current_state == State.REACTING or current_state == State.COOLDOWN or current_state == State.ANNOYED or current_state == State.LOCKED:
 		return
 
 	_stop_move_tween()
