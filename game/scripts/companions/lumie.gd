@@ -35,6 +35,7 @@ const ANNOYED_SECONDS := 30.0
 
 var current_state: State = State.LOCKED
 var successful_tap_count: int = 0
+var interaction_enabled: bool = true
 var _rng := RandomNumberGenerator.new()
 var _move_tween: Tween
 
@@ -49,6 +50,18 @@ func _ready() -> void:
 	GameState.state_changed.connect(_refresh_unlock_state)
 	emoji_label.visible = false
 	_refresh_unlock_state()
+	_apply_interaction_state()
+
+
+func set_interaction_enabled(enabled: bool) -> void:
+	interaction_enabled = enabled
+	_apply_interaction_state()
+
+
+func _apply_interaction_state() -> void:
+	if not is_node_ready():
+		return
+	body_button.disabled = not interaction_enabled
 
 
 func _refresh_unlock_state() -> void:
@@ -67,7 +80,7 @@ func _refresh_unlock_state() -> void:
 
 
 func _on_body_pressed() -> void:
-	if not GameState.lumie_unlocked:
+	if not interaction_enabled or not GameState.lumie_unlocked:
 		return
 	if current_state == State.REACTING or current_state == State.COOLDOWN or current_state == State.ANNOYED or current_state == State.LOCKED:
 		return
