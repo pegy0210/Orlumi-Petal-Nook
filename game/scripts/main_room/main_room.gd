@@ -14,6 +14,8 @@ const LUMIE_INTRO_LINES: Array[String] = [
 	"Its name is Lumie."
 ]
 
+@onready var header: Label = $Header
+@onready var resource_ui: VBoxContainer = $ResourceUI
 @onready var petals_label: Label = $ResourceUI/Petals
 @onready var income_label: Label = $ResourceUI/Income
 @onready var comfort_label: Label = $ResourceUI/Comfort
@@ -24,16 +26,22 @@ const LUMIE_INTRO_LINES: Array[String] = [
 @onready var small_table_placeholder: Label = $SmallTablePlaceholder
 @onready var lumie = $Lumie
 @onready var status_label: Label = $Status
+@onready var dev_note: Label = $DevNote
 @onready var save_button: Button = $SaveButton
 @onready var shop_button: Button = $ShopButton
 @onready var settings_button: Button = $SettingsButton
 @onready var offline_boost_button: Button = $OfflineBoostButton
+@onready var photo_button: Button = $PhotoButton
 @onready var shop_panel = $ShopPanel
 @onready var settings_panel = $SettingsPanel
 @onready var offline_popup: Panel = $OfflinePopup
 @onready var offline_reward_label: Label = $OfflinePopup/Reward
 @onready var offline_claim_button: Button = $OfflinePopup/Claim
+@onready var photo_mode_ui = $PhotoModeUI
 @onready var story_overlay = $StoryOverlay
+
+var photo_mode_active: bool = false
+var _photo_result_message: String = ""
 
 
 func _ready() -> void:
@@ -47,11 +55,15 @@ func _ready() -> void:
 	shop_button.pressed.connect(_on_shop_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	offline_boost_button.pressed.connect(_on_offline_boost_pressed)
+	photo_button.pressed.connect(_on_photo_pressed)
 	offline_claim_button.pressed.connect(_on_offline_claim_pressed)
 	story_overlay.sequence_finished.connect(_on_story_sequence_finished)
 	shop_panel.close_requested.connect(_on_modal_closed)
 	settings_panel.close_requested.connect(_on_modal_closed)
 	settings_panel.reset_completed.connect(_on_reset_completed)
+	photo_mode_ui.exit_requested.connect(_on_photo_exit_requested)
+	photo_mode_ui.capture_saved.connect(_on_photo_capture_saved)
+	photo_mode_ui.capture_failed.connect(_on_photo_capture_failed)
 	lumie.reaction_started.connect(_on_lumie_reaction_started)
 	lumie.annoyed_started.connect(_on_lumie_annoyed_started)
 	lumie.annoyed_ended.connect(_on_lumie_annoyed_ended)
@@ -111,27 +123,54 @@ func _is_modal_open() -> bool:
 	return story_overlay.is_sequence_active() or shop_panel.visible or settings_panel.visible or offline_popup.visible
 
 
+func _is_standard_input_blocked() -> bool:
+	return photo_mode_active or _is_modal_open()
+
+
 func _update_modal_input_state() -> void:
 	if not is_node_ready():
 		return
+	if photo_mode_active:
+		little_pot_button.disabled = true
+		save_button.disabled = true
+		shop_button.disabled = true
+		settings_button.disabled = true
+		offline_boost_button.disabled = true
+		photo_button.disabled = true
+		lumie.set_interaction_enabled(true)
+		return
+
 	var blocked := _is_modal_open()
 	little_pot_button.disabled = blocked
 	save_button.disabled = blocked
 	shop_button.disabled = blocked
 	settings_button.disabled = blocked
 	offline_boost_button.disabled = blocked or GameState.offline_cap_minutes >= 120
+	photo_button.disabled = blocked
 	lumie.set_interaction_enabled(not blocked)
 
 
+func _set_standard_ui_visible(value: bool) -> void:
+	header.visible = value
+	resource_ui.visible = value
+	save_button.visible = value
+	shop_button.visible = value
+	settings_button.visible = value
+	offline_boost_button.visible = value
+	photo_button.visible = value
+	status_label.visible = value
+	dev_note.visible = value
+
+
 func _on_little_pot_pressed() -> void:
-	if _is_modal_open():
+	if _is_standard_input_blocked():
 		return
 	EconomyService.tap_little_pot()
 	status_label.text = "+%d Petal" % int(GameState.tap_value)
 
 
 func _on_save_pressed() -> void:
-	if _is_modal_open():
+	if _is_standard_input_blocked():
 		return
 	if SaveService.save_progress():
 		status_label.text = "Saved ✦"
@@ -140,7 +179,7 @@ func _on_save_pressed() -> void:
 
 
 func _on_shop_pressed() -> void:
-	if _is_modal_open():
+	if _is_standard_input_blocked():
 		return
 	settings_panel.visible = false
 	shop_panel.open_panel()
@@ -148,7 +187,7 @@ func _on_shop_pressed() -> void:
 
 
 func _on_settings_pressed() -> void:
-	if _is_modal_open():
+	if _is_standard_input_blocked():
 		return
 	shop_panel.visible = false
 	settings_panel.open_panel()
@@ -156,7 +195,7 @@ func _on_settings_pressed() -> void:
 
 
 func _on_offline_boost_pressed() -> void:
-	if _is_modal_open():
+	if _is_standard_input_blocked():
 		return
 	if GameState.offline_cap_minutes >= 120:
 		status_label.text = "Offline Limit is already 120 min"
@@ -184,6 +223,38 @@ func _on_rewarded_ad_unavailable(reward_id: String) -> void:
 	_refresh_ui()
 
 
+func _on_photo_pressed() -> void:
+	if _is_standard_input_blocked():
+		return
+	photo_mode_active = true
+	_photo_result_message = ""
+	shop_panel.visible = false
+	settings_panel.visible = false
+	offline_popup.visible = false
+	_set_standard_ui_visible(false)
+	photo_mode_ui.open_mode()
+	_update_modal_input_state()
+
+
+func _on_photo_exit_requested() -> void:
+	if not photo_mode_active:
+		return
+	photo_mode_ui.close_mode()
+	photo_mode_active = false
+	_set_standard_ui_visible(true)
+	_update_modal_input_state()
+	if not _photo_result_message.is_empty():
+		status_label.text = _photo_result_message
+
+
+func _on_photo_capture_saved(path: String) -> void:
+	_photo_result_message = "Photo saved: %s" % path
+
+
+func _on_photo_capture_failed() -> void:
+	_photo_result_message = "Photo capture failed"
+
+
 func _on_modal_closed() -> void:
 	_update_modal_input_state()
 
@@ -203,7 +274,7 @@ func _on_purchase_failed(_item_id: String, reason: String) -> void:
 
 
 func _on_offline_claim_pressed() -> void:
-	if story_overlay.is_sequence_active() or shop_panel.visible or settings_panel.visible:
+	if photo_mode_active or story_overlay.is_sequence_active() or shop_panel.visible or settings_panel.visible:
 		return
 	var amount := OfflineService.claim_pending_reward()
 	status_label.text = "+%d offline Petals" % int(floor(amount))
