@@ -2,7 +2,7 @@
 
 **Status:** ACTIVE — WAITING FOR APPROVED BGROOM ART FILE  
 **Project:** @Orlumi Studio → @Petal Nook  
-**Production path:** `assets/backgrounds/bg_room_main.png`
+**Production path:** `assets/backgrounds/main_room/bg_room_main.png`
 
 ## Objective
 
@@ -10,7 +10,7 @@ Lock the main room background before furniture, Lumie and UI art are positioned 
 
 ## Final production contract
 
-- File: `assets/backgrounds/bg_room_main.png`
+- File: `assets/backgrounds/main_room/bg_room_main.png`
 - Format: PNG
 - Source dimensions: **1280 × 2200 px**
 - Orientation: portrait
@@ -89,13 +89,13 @@ BgRoom is considered **approved** only when all of these pass:
 
 ## Automatic validation
 
-`tools/validate_assets.py` checks final-path asset dimensions and PNG validity. GitHub CI must run this validator on every push / pull request.
+`tools/validate_assets.py` checks final-path asset dimensions and PNG validity. GitHub CI runs this validator on every push / pull request.
 
 Automatic validation does **not** replace art-direction review. Composition, perspective and brand quality remain a human/Studio approval gate.
 
 ## Integration sequence after approval
 
-1. Put approved image at `assets/backgrounds/bg_room_main.png`.
+1. Put approved image at `assets/backgrounds/main_room/bg_room_main.png`.
 2. Run asset-contract CI.
 3. Godot `VisualAssetService` detects the final path automatically.
 4. MainRoom switches from fallback colour to the approved background.
