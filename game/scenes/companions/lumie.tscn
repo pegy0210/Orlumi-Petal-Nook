@@ -1,0 +1,48 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://game/scripts/companions/lumie.gd" id="1_lumie"]
+
+[node name="Lumie" type="Control"]
+visible = false
+layout_mode = 0
+offset_left = 220.0
+offset_top = 980.0
+offset_right = 400.0
+offset_bottom = 1140.0
+mouse_filter = 1
+script = ExtResource("1_lumie")
+
+[node name="Emoji" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 45.0
+offset_top = -72.0
+offset_right = 145.0
+offset_bottom = -12.0
+theme_override_font_sizes/font_size = 40
+text = "✨"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="BodyButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 180.0
+offset_bottom = 160.0
+theme_override_colors/font_color = Color(0.568627, 0.494118, 0.654902, 1)
+theme_override_font_sizes/font_size = 28
+text = "Lumie ✦"
+
+[node name="MoveTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="EmojiTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="CooldownTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AnnoyedTimer" type="Timer" parent="."]
+one_shot = true
