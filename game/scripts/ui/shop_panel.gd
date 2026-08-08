@@ -17,7 +17,6 @@ func _ready() -> void:
 	curtain_card.get_node("Upgrade").pressed.connect(_purchase.bind("curtain"))
 	small_table_card.get_node("Upgrade").pressed.connect(_purchase.bind("small_table"))
 	GameState.state_changed.connect(refresh)
-	refresh()
 
 
 func open_panel() -> void:
@@ -31,6 +30,8 @@ func close_panel() -> void:
 
 
 func refresh() -> void:
+	if not visible:
+		return
 	_refresh_card(little_pot_card, "little_pot")
 	_refresh_card(wooden_rack_card, "wooden_rack")
 	_refresh_card(curtain_card, "curtain")
@@ -76,18 +77,18 @@ func _get_level(item_id: String) -> int:
 func _get_next_effect_text(item_id: String, next_level: int) -> String:
 	match item_id:
 		"little_pot":
-			var data: Dictionary = EconomyService.LITTLE_POT[next_level]
-			var text := "Next: %.0f/sec" % float(data["income"])
-			if float(data["tap_bonus"]) > 0.0 and next_level == 3:
-				text += " • Tap +1"
-			return text
+			var pot_data: Dictionary = EconomyService.LITTLE_POT[next_level]
+			var pot_text := "Next: %.0f/sec" % float(pot_data["income"])
+			if float(pot_data["tap_bonus"]) > 0.0 and next_level == 3:
+				pot_text += " • Tap +1"
+			return pot_text
 		"wooden_rack":
-			var data: Dictionary = EconomyService.WOODEN_RACK[next_level]
-			return "Next: +%.0f/sec" % float(data["income"])
+			var rack_data: Dictionary = EconomyService.WOODEN_RACK[next_level]
+			return "Next: +%.0f/sec" % float(rack_data["income"])
 		"curtain":
-			var data: Dictionary = EconomyService.CURTAIN[next_level]
-			return "Next: +%.0f%% income" % float(data["bonus"])
+			var curtain_data: Dictionary = EconomyService.CURTAIN[next_level]
+			return "Next: +%.0f%% income" % float(curtain_data["bonus"])
 		"small_table":
-			var data: Dictionary = EconomyService.SMALL_TABLE[next_level]
-			return "Next: +%.0f%% income" % float(data["bonus"])
+			var table_data: Dictionary = EconomyService.SMALL_TABLE[next_level]
+			return "Next: +%.0f%% income" % float(table_data["bonus"])
 	return "Next"
