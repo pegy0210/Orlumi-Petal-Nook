@@ -27,6 +27,7 @@ const LUMIE_INTRO_LINES: Array[String] = [
 @onready var save_button: Button = $SaveButton
 @onready var shop_button: Button = $ShopButton
 @onready var settings_button: Button = $SettingsButton
+@onready var offline_boost_button: Button = $OfflineBoostButton
 @onready var shop_panel = $ShopPanel
 @onready var settings_panel = $SettingsPanel
 @onready var offline_popup: Panel = $OfflinePopup
@@ -39,10 +40,13 @@ func _ready() -> void:
 	GameState.state_changed.connect(_refresh_ui)
 	EconomyService.purchase_succeeded.connect(_on_purchase_succeeded)
 	EconomyService.purchase_failed.connect(_on_purchase_failed)
+	RewardedAdService.reward_granted.connect(_on_rewarded_ad_granted)
+	RewardedAdService.reward_unavailable.connect(_on_rewarded_ad_unavailable)
 	little_pot_button.pressed.connect(_on_little_pot_pressed)
 	save_button.pressed.connect(_on_save_pressed)
 	shop_button.pressed.connect(_on_shop_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
+	offline_boost_button.pressed.connect(_on_offline_boost_pressed)
 	offline_claim_button.pressed.connect(_on_offline_claim_pressed)
 	story_overlay.sequence_finished.connect(_on_story_sequence_finished)
 	shop_panel.close_requested.connect(_on_modal_closed)
@@ -65,6 +69,11 @@ func _refresh_ui() -> void:
 	wooden_rack_placeholder.visible = GameState.wooden_rack_level >= 1
 	curtain_placeholder.visible = GameState.curtain_level >= 1
 	small_table_placeholder.visible = GameState.small_table_level >= 1
+	if GameState.offline_cap_minutes >= 120:
+		offline_boost_button.text = "Offline MAX"
+	else:
+		offline_boost_button.text = "Offline +15m"
+	_update_modal_input_state()
 
 
 func _prepare_offline_popup() -> void:
@@ -110,6 +119,7 @@ func _update_modal_input_state() -> void:
 	save_button.disabled = blocked
 	shop_button.disabled = blocked
 	settings_button.disabled = blocked
+	offline_boost_button.disabled = blocked or GameState.offline_cap_minutes >= 120
 	lumie.set_interaction_enabled(not blocked)
 
 
@@ -143,6 +153,35 @@ func _on_settings_pressed() -> void:
 	shop_panel.visible = false
 	settings_panel.open_panel()
 	_update_modal_input_state()
+
+
+func _on_offline_boost_pressed() -> void:
+	if _is_modal_open():
+		return
+	if GameState.offline_cap_minutes >= 120:
+		status_label.text = "Offline Limit is already 120 min"
+		return
+	if RewardedAdService.request_offline_cap_boost():
+		status_label.text = "Rewarded ad..."
+	else:
+		status_label.text = "Rewarded ad unavailable"
+
+
+func _on_rewarded_ad_granted(reward_id: String) -> void:
+	if reward_id != RewardedAdService.OFFLINE_CAP_REWARD_ID:
+		return
+	status_label.text = "Offline Limit +15 min ✦"
+	_refresh_ui()
+
+
+func _on_rewarded_ad_unavailable(reward_id: String) -> void:
+	if reward_id != RewardedAdService.OFFLINE_CAP_REWARD_ID:
+		return
+	if GameState.offline_cap_minutes >= 120:
+		status_label.text = "Offline Limit is already 120 min"
+	else:
+		status_label.text = "Rewarded ad unavailable"
+	_refresh_ui()
 
 
 func _on_modal_closed() -> void:
