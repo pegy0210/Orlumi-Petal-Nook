@@ -22,7 +22,7 @@ const LUMIE_INTRO_LINES: Array[String] = [
 @onready var wooden_rack_placeholder: Label = $WoodenRackPlaceholder
 @onready var curtain_placeholder: Label = $CurtainPlaceholder
 @onready var small_table_placeholder: Label = $SmallTablePlaceholder
-@onready var lumie_placeholder: Label = $LumiePlaceholder
+@onready var lumie = $Lumie
 @onready var status_label: Label = $Status
 @onready var save_button: Button = $SaveButton
 @onready var shop_button: Button = $ShopButton
@@ -42,6 +42,9 @@ func _ready() -> void:
 	shop_button.pressed.connect(_on_shop_pressed)
 	offline_claim_button.pressed.connect(_on_offline_claim_pressed)
 	story_overlay.sequence_finished.connect(_on_story_sequence_finished)
+	lumie.reaction_started.connect(_on_lumie_reaction_started)
+	lumie.annoyed_started.connect(_on_lumie_annoyed_started)
+	lumie.annoyed_ended.connect(_on_lumie_annoyed_ended)
 	_refresh_ui()
 	_prepare_offline_popup()
 	call_deferred("_start_opening_if_needed")
@@ -55,7 +58,6 @@ func _refresh_ui() -> void:
 	wooden_rack_placeholder.visible = GameState.wooden_rack_level >= 1
 	curtain_placeholder.visible = GameState.curtain_level >= 1
 	small_table_placeholder.visible = GameState.small_table_level >= 1
-	lumie_placeholder.visible = GameState.lumie_unlocked
 
 
 func _prepare_offline_popup() -> void:
@@ -83,11 +85,15 @@ func _start_lumie_intro_if_needed() -> void:
 
 
 func _on_little_pot_pressed() -> void:
+	if story_overlay.is_sequence_active():
+		return
 	EconomyService.tap_little_pot()
 	status_label.text = "+%d Petal" % int(GameState.tap_value)
 
 
 func _on_save_pressed() -> void:
+	if story_overlay.is_sequence_active():
+		return
 	if SaveService.save_progress():
 		status_label.text = "Saved ✦"
 	else:
@@ -115,10 +121,24 @@ func _on_purchase_failed(_item_id: String, reason: String) -> void:
 
 
 func _on_offline_claim_pressed() -> void:
+	if story_overlay.is_sequence_active():
+		return
 	var amount := OfflineService.claim_pending_reward()
 	status_label.text = "+%d offline Petals" % int(floor(amount))
 	offline_popup.visible = false
 	_refresh_ui()
+
+
+func _on_lumie_reaction_started(emoji: String) -> void:
+	status_label.text = "Lumie %s" % emoji
+
+
+func _on_lumie_annoyed_started() -> void:
+	status_label.text = "Lumie wants a little quiet..."
+
+
+func _on_lumie_annoyed_ended() -> void:
+	status_label.text = "Lumie feels better ✦"
 
 
 func _on_story_sequence_finished(sequence_id: String) -> void:
