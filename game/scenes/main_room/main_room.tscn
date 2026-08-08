@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/main_room/main_room.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/story_overlay.tscn" id="2_story"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/shop_panel.tscn" id="3_shop"]
 [ext_resource type="PackedScene" path="res://game/scenes/companions/lumie.tscn" id="4_lumie"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/settings_panel.tscn" id="5_settings"]
+[ext_resource type="PackedScene" path="res://game/scenes/ui/photo_mode_ui.tscn" id="6_photo"]
 
 [node name="MainRoom" type="Control"]
 layout_mode = 3
@@ -103,12 +104,21 @@ offset_bottom = 386.0
 theme_override_font_sizes/font_size = 22
 text = "Offline +15m"
 
+[node name="PhotoButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 820.0
+offset_top = 404.0
+offset_right = 1024.0
+offset_bottom = 474.0
+theme_override_font_sizes/font_size = 24
+text = "Photo"
+
 [node name="DevNote" type="Label" parent="."]
 layout_mode = 0
 offset_left = 48.0
-offset_top = 400.0
+offset_top = 500.0
 offset_right = 760.0
-offset_bottom = 450.0
+offset_bottom = 550.0
 theme_override_colors/font_color = Color(0.529412, 0.435294, 0.352941, 1)
 theme_override_font_sizes/font_size = 21
 text = "Developer layout — approved art will replace placeholders."
@@ -210,4 +220,5 @@ offset_bottom = 360.0
 theme_override_font_sizes/font_size = 25
 text = "Claim"
 
+[node name="PhotoModeUI" parent="." instance=ExtResource("6_photo")]
 [node name="StoryOverlay" parent="." instance=ExtResource("2_story")]
