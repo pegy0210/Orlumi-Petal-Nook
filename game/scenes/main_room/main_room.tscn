@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/main_room/main_room.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/story_overlay.tscn" id="2_story"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/shop_panel.tscn" id="3_shop"]
+[ext_resource type="PackedScene" path="res://game/scenes/companions/lumie.tscn" id="4_lumie"]
 
 [node name="MainRoom" type="Control"]
 layout_mode = 3
@@ -138,24 +139,14 @@ theme_override_font_sizes/font_size = 26
 text = "Small Table"
 horizontal_alignment = 1
 
-[node name="LumiePlaceholder" type="Label" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 170.0
-offset_top = 980.0
-offset_right = 440.0
-offset_bottom = 1070.0
-theme_override_colors/font_color = Color(0.568627, 0.494118, 0.654902, 1)
-theme_override_font_sizes/font_size = 30
-text = "Lumie ✦"
-horizontal_alignment = 1
+[node name="Lumie" parent="." instance=ExtResource("4_lumie")]
 
 [node name="Status" type="Label" parent="."]
 layout_mode = 0
-offset_left = 340.0
+offset_left = 300.0
 offset_top = 1510.0
-offset_right = 740.0
-offset_bottom = 1570.0
+offset_right = 780.0
+offset_bottom = 1580.0
 theme_override_colors/font_color = Color(0.529412, 0.435294, 0.352941, 1)
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
