@@ -11,7 +11,7 @@ assets/
   backgrounds/
     main_room/
       bg_room_main.png
-      area2_locked.png
+      area2_locked.png        # future separate overlay; not part of base BgRoom
   furniture/
     little_pot/
       little_pot_lv1.png
@@ -82,20 +82,30 @@ It must not contain:
 - Small Table
 - Lumie or another companion
 - lock icon / locked badge
+- locked doorway treatment
+- Area 2 boundary or marker
 - gameplay UI
 - Photo Mode controls
 - logo or text
+- dominant human-scale living-room / bedroom / kitchen objects
 
 Composition requirements:
 
 - portrait semi top-down / 3/4 perspective
 - window on the left and low enough to preserve the top-left information zone
 - clean top-left UI area
-- active gameplay floor concentrated centre-left / lower-middle
-- right side visually reserved for future Area 2
-- sufficient empty floor for separate Godot furniture sprites and Lumie movement
+- generous open centre/lower floor for separate game objects
+- right side retains spatial capacity for future Area 2 but looks natural before Area 2 is shown
+- soft garden/spirit-nook feeling rather than a conventional human residence
+- restrained flowers, stones and plant growth concentrated around edges rather than filling the play area
 
 Full acceptance criteria: `docs/production/M7-bgroom-gate.md`.
+
+## Area 2 asset rule
+
+`area2_locked.png` is a **future state-driven overlay**, not part of `bg_room_main.png`.
+
+The clean base background must work without any visible lock state. When the Area 2 feature is implemented, the overlay can be shown or hidden independently by Godot based on game state.
 
 ## Lumie non-negotiable identity rules
 
