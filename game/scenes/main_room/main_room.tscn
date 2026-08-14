@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/main_room/main_room.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/story_overlay.tscn" id="2_story"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://game/scenes/ui/settings_panel.tscn" id="5_settings"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/photo_mode_ui.tscn" id="6_photo"]
 [ext_resource type="PackedScene" path="res://game/scenes/visuals/furniture_visual.tscn" id="7_furniture"]
+[ext_resource type="PackedScene" path="res://game/scenes/debug/layout_calibration_overlay.tscn" id="8_layout_debug"]
 
 [node name="MainRoom" type="Control"]
 layout_mode = 3
@@ -272,3 +273,4 @@ text = "Claim"
 
 [node name="PhotoModeUI" parent="Overlay" instance=ExtResource("6_photo")]
 [node name="StoryOverlay" parent="Overlay" instance=ExtResource("2_story")]
+[node name="LayoutCalibrationOverlay" parent="Overlay" instance=ExtResource("8_layout_debug")]
