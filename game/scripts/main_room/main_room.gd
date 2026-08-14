@@ -1,5 +1,7 @@
 extends Control
 
+const RoomLayout = preload("res://game/data/room_layout.gd")
+
 const OPENING_LINES: Array[String] = [
 	"Somewhere within Orlumi,",
 	"there is a little house.",
@@ -16,7 +18,10 @@ const LUMIE_INTRO_LINES: Array[String] = [
 
 @onready var background_fallback: ColorRect = $Base/BackgroundFallback
 @onready var background_texture: TextureRect = $Base/BackgroundTexture
+@onready var curtain_visual = $Furniture/Curtain
+@onready var wooden_rack_visual = $Furniture/WoodenRack
 @onready var little_pot_visual = $Furniture/LittlePot
+@onready var small_table_visual = $Furniture/SmallTable
 @onready var lumie = $Companions/Lumie
 @onready var ui_layer: Control = $UI
 @onready var petals_label: Label = $UI/ResourceUI/Petals
@@ -36,12 +41,15 @@ const LUMIE_INTRO_LINES: Array[String] = [
 @onready var offline_claim_button: Button = $Overlay/OfflinePopup/Claim
 @onready var photo_mode_ui = $Overlay/PhotoModeUI
 @onready var story_overlay = $Overlay/StoryOverlay
+@onready var layout_debug_overlay = $Overlay/LayoutCalibrationOverlay
 
 var photo_mode_active: bool = false
 var _photo_result_message: String = ""
 
 
 func _ready() -> void:
+	_apply_room_layout()
+	_configure_layout_debug()
 	GameState.state_changed.connect(_refresh_ui)
 	EconomyService.purchase_succeeded.connect(_on_purchase_succeeded)
 	EconomyService.purchase_failed.connect(_on_purchase_failed)
@@ -69,6 +77,33 @@ func _ready() -> void:
 	_prepare_offline_popup()
 	_update_modal_input_state()
 	call_deferred("_start_opening_if_needed")
+
+
+func _apply_room_layout() -> void:
+	var furniture_nodes := {
+		"curtain": curtain_visual,
+		"wooden_rack": wooden_rack_visual,
+		"little_pot": little_pot_visual,
+		"small_table": small_table_visual,
+	}
+	for item_id in furniture_nodes.keys():
+		var rect: Rect2 = RoomLayout.get_furniture_rect(String(item_id))
+		var node: Control = furniture_nodes[item_id]
+		node.position = rect.position
+		node.size = rect.size
+
+	lumie.movement_bounds = RoomLayout.LUMIE_MOVEMENT_BOUNDS
+	lumie.position = RoomLayout.LUMIE_START_POSITION
+
+
+func _configure_layout_debug() -> void:
+	var enabled := OS.is_debug_build() and "--layout-debug" in OS.get_cmdline_user_args()
+	layout_debug_overlay.set_enabled(enabled)
+
+
+func set_layout_debug_enabled(enabled: bool) -> void:
+	if OS.is_debug_build():
+		layout_debug_overlay.set_enabled(enabled)
 
 
 func _refresh_visual_assets() -> void:
