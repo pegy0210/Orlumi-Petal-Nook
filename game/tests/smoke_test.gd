@@ -1,5 +1,7 @@
 extends Node
 
+const RoomLayout = preload("res://game/data/room_layout.gd")
+
 var failures: Array[String] = []
 
 
@@ -45,12 +47,28 @@ func _run() -> void:
 	_check(GameState.offline_cap_minutes == 120, "Offline cap should stop at 120")
 	_check(not OfflineService.increase_cap_after_rewarded_ad(), "Offline cap must not exceed 120")
 
+	_check(RoomLayout.REFERENCE_VIEWPORT == Vector2(1080.0, 1920.0), "Room layout reference must remain 1080x1920")
+	_check(RoomLayout.HUD_SAFE_ZONE.end.y < RoomLayout.ACTIVE_GAMEPLAY_FLOOR.position.y, "HUD safe zone should remain above the active floor")
+	_check(RoomLayout.LUMIE_MOVEMENT_BOUNDS.end.x <= RoomLayout.AREA2_RESERVE.position.x, "Lumie movement must not enter Area 2 reserve")
+	for item_id in RoomLayout.FURNITURE_RECTS.keys():
+		var rect: Rect2 = RoomLayout.get_furniture_rect(String(item_id))
+		_check(RoomLayout.is_rect_inside_reference(rect), "%s layout rect must remain inside reference viewport" % String(item_id))
+
+	var layout_overlay_scene := load("res://game/scenes/debug/layout_calibration_overlay.tscn")
+	_check(layout_overlay_scene != null, "Layout calibration overlay should load")
+	if layout_overlay_scene != null:
+		var layout_overlay_instance = layout_overlay_scene.instantiate()
+		_check(layout_overlay_instance != null, "Layout calibration overlay should instantiate")
+		if layout_overlay_instance != null:
+			layout_overlay_instance.queue_free()
+
 	var main_room_scene := load("res://game/scenes/main_room/main_room.tscn")
 	_check(main_room_scene != null, "MainRoom scene should load")
 	if main_room_scene != null:
 		var main_room_instance = main_room_scene.instantiate()
 		_check(main_room_instance != null, "MainRoom scene should instantiate")
 		if main_room_instance != null:
+			_check(main_room_instance.has_node("Overlay/LayoutCalibrationOverlay"), "MainRoom should include layout calibration overlay")
 			main_room_instance.queue_free()
 
 	SaveService.reset_progress()
