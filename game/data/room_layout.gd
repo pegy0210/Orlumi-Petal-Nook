@@ -3,8 +3,12 @@ extends RefCounted
 # Orlumi: Petal Nook — MainRoom layout source of truth.
 #
 # These values are provisional calibration coordinates until the approved
-# BgRoom is integrated. Once BgRoom is approved, tune this file rather than
-# scattering coordinate edits across scenes and gameplay scripts.
+# clean BgRoom is integrated. Once BgRoom is approved, tune this file rather
+# than scattering coordinate edits across scenes and gameplay scripts.
+#
+# AREA2_RESERVE is spatial capacity only. It must not imply that the base
+# background shows a lock, doorway, boundary or other Area 2 state marker.
+# Any future locked/unlocked Area 2 presentation is a separate visual layer.
 
 const REFERENCE_VIEWPORT := Vector2(1080.0, 1920.0)
 
@@ -24,7 +28,8 @@ const FURNITURE_RECTS := {
 	"small_table": Rect2(700.0, 1190.0, 300.0, 300.0),
 }
 
-# Companion movement deliberately remains left of the reserved Area 2 region.
+# Companion movement deliberately remains left of the reserved future Area 2
+# region. The reserve itself is not a visible locked zone in the clean BgRoom.
 const LUMIE_START_POSITION := Vector2(220.0, 980.0)
 const LUMIE_MOVEMENT_BOUNDS := Rect2(140.0, 760.0, 560.0, 480.0)
 
