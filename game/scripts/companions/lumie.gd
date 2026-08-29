@@ -1,5 +1,7 @@
 extends Control
 
+const RoomLayout = preload("res://game/data/room_layout.gd")
+
 signal reaction_started(emoji: String)
 signal annoyed_started
 signal annoyed_ended
@@ -54,6 +56,7 @@ func _ready() -> void:
 	annoyed_timer.timeout.connect(_on_annoyed_timer_timeout)
 	GameState.state_changed.connect(_refresh_unlock_state)
 	emoji_label.visible = false
+	_refresh_movement_contract()
 	_refresh_unlock_state()
 	_apply_interaction_state()
 
@@ -67,6 +70,14 @@ func set_movement_exclusions(rects: Array[Rect2]) -> void:
 	movement_exclusion_rects = rects.duplicate()
 
 
+func _refresh_movement_contract() -> void:
+	movement_bounds = RoomLayout.LUMIE_MOVEMENT_BOUNDS
+	movement_exclusion_rects = RoomLayout.get_lumie_exclusion_rects(
+		GameState.wooden_rack_level > 0,
+		GameState.small_table_level > 0
+	)
+
+
 func _apply_interaction_state() -> void:
 	if not is_node_ready():
 		return
@@ -74,6 +85,7 @@ func _apply_interaction_state() -> void:
 
 
 func _refresh_unlock_state() -> void:
+	_refresh_movement_contract()
 	if not GameState.lumie_unlocked:
 		visible = false
 		_stop_all_activity()
