@@ -2,6 +2,8 @@ extends Control
 
 signal tapped
 
+const RoomLayout = preload("res://game/data/room_layout.gd")
+
 @export var item_id: String = ""
 @export var fallback_name: String = "Furniture"
 @export var interactive: bool = false
@@ -20,6 +22,7 @@ func _ready() -> void:
 
 
 func refresh() -> void:
+	_apply_dynamic_layout_if_needed()
 	var level := _get_level()
 	visible = level > 0
 	if not visible:
@@ -32,6 +35,14 @@ func refresh() -> void:
 	fallback_label.text = "%s\nLv.%d" % [fallback_name, level]
 	hit_button.visible = interactive
 	hit_button.disabled = not interactive or not _interaction_enabled
+
+
+func _apply_dynamic_layout_if_needed() -> void:
+	if item_id != "little_pot":
+		return
+	var rect := RoomLayout.get_little_pot_rect(GameState.small_table_level > 0)
+	position = rect.position
+	size = rect.size
 
 
 func set_interaction_enabled(enabled: bool) -> void:
