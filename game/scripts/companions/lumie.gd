@@ -17,8 +17,9 @@ enum State {
 const NORMAL_EMOJIS: Array[String] = ["🌸", "✨", "😊", "💛", "😴", "❔"]
 const EMOJI_VISIBLE_SECONDS := 2.0
 const ANNOYED_SECONDS := 30.0
+const MAX_TARGET_ATTEMPTS := 18
 
-@export var movement_bounds := Rect2(140.0, 760.0, 560.0, 480.0)
+@export var movement_bounds := Rect2(105.0, 720.0, 700.0, 700.0)
 @export var min_move_wait_seconds := 2.5
 @export var max_move_wait_seconds := 5.0
 @export var min_move_duration_seconds := 1.6
@@ -39,6 +40,7 @@ const ANNOYED_SECONDS := 30.0
 var current_state: State = State.LOCKED
 var successful_tap_count: int = 0
 var interaction_enabled: bool = true
+var movement_exclusion_rects: Array[Rect2] = []
 var _rng := RandomNumberGenerator.new()
 var _move_tween: Tween
 
@@ -59,6 +61,10 @@ func _ready() -> void:
 func set_interaction_enabled(enabled: bool) -> void:
 	interaction_enabled = enabled
 	_apply_interaction_state()
+
+
+func set_movement_exclusions(rects: Array[Rect2]) -> void:
+	movement_exclusion_rects = rects.duplicate()
 
 
 func _apply_interaction_state() -> void:
@@ -89,10 +95,7 @@ func _apply_visual_state(state_name: String) -> void:
 	body_texture.texture = texture
 	body_texture.visible = texture != null
 	fallback_label.visible = texture == null
-	if state_name == "annoyed":
-		fallback_label.text = "Lumie\n(annoyed)"
-	else:
-		fallback_label.text = "Lumie ✦"
+	fallback_label.text = "Lumie\n(annoyed)" if state_name == "annoyed" else "Lumie ✦"
 
 	var shadow := VisualAssetService.get_companion_shadow("lumie")
 	shadow_texture.texture = shadow
@@ -102,7 +105,7 @@ func _apply_visual_state(state_name: String) -> void:
 func _on_body_pressed() -> void:
 	if not interaction_enabled or not GameState.lumie_unlocked:
 		return
-	if current_state == State.REACTING or current_state == State.COOLDOWN or current_state == State.ANNOYED or current_state == State.LOCKED:
+	if current_state in [State.REACTING, State.COOLDOWN, State.ANNOYED, State.LOCKED]:
 		return
 
 	_stop_move_tween()
@@ -143,13 +146,11 @@ func _on_cooldown_timer_timeout() -> void:
 func _should_become_annoyed(tap_count: int) -> bool:
 	if tap_count < 6:
 		return false
-	var chance := 0.0
-	if tap_count <= 7:
-		chance = 0.25
-	elif tap_count <= 9:
-		chance = 0.50
-	else:
+	var chance := 0.25
+	if tap_count >= 10:
 		chance = 1.0
+	elif tap_count >= 8:
+		chance = 0.50
 	return _rng.randf() < chance
 
 
@@ -193,10 +194,7 @@ func _on_move_timer_timeout() -> void:
 
 
 func _start_move_to_random_point() -> void:
-	var target := Vector2(
-		_rng.randf_range(movement_bounds.position.x, movement_bounds.end.x),
-		_rng.randf_range(movement_bounds.position.y, movement_bounds.end.y)
-	)
+	var target := _pick_valid_movement_target()
 	var duration := _rng.randf_range(min_move_duration_seconds, max_move_duration_seconds)
 	_set_state(State.MOVING)
 	_move_tween = create_tween()
@@ -204,6 +202,24 @@ func _start_move_to_random_point() -> void:
 	_move_tween.set_ease(Tween.EASE_IN_OUT)
 	_move_tween.tween_property(self, "position", target, duration)
 	_move_tween.finished.connect(_on_move_finished)
+
+
+func _pick_valid_movement_target() -> Vector2:
+	for _attempt in range(MAX_TARGET_ATTEMPTS):
+		var candidate := Vector2(
+			_rng.randf_range(movement_bounds.position.x, movement_bounds.end.x),
+			_rng.randf_range(movement_bounds.position.y, movement_bounds.end.y)
+		)
+		if _is_valid_movement_point(candidate):
+			return candidate
+	return movement_bounds.get_center()
+
+
+func _is_valid_movement_point(point: Vector2) -> bool:
+	for rect in movement_exclusion_rects:
+		if rect.has_point(point):
+			return false
+	return true
 
 
 func _on_move_finished() -> void:
