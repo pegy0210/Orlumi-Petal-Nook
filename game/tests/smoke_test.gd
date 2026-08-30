@@ -1,6 +1,7 @@
 extends Node
 
 const RoomLayout = preload("res://game/data/room_layout.gd")
+const FurnitureVisualContract = preload("res://game/data/furniture_visual_contract.gd")
 
 var failures: Array[String] = []
 
@@ -50,9 +51,19 @@ func _run() -> void:
 	_check(RoomLayout.REFERENCE_VIEWPORT == Vector2(1080.0, 1920.0), "Room layout reference must remain 1080x1920")
 	_check(RoomLayout.HUD_SAFE_ZONE.end.y < RoomLayout.ACTIVE_GAMEPLAY_FLOOR.position.y, "HUD safe zone should remain above the active floor")
 	_check(RoomLayout.LUMIE_MOVEMENT_BOUNDS.end.x <= RoomLayout.AREA2_RESERVE.position.x, "Lumie movement must not enter Area 2 reserve")
+	_check(RoomLayout.LUMIE_MOVEMENT_BOUNDS.size.x >= 650.0, "Layout A must preserve broad Lumie horizontal roaming")
+	_check(RoomLayout.LUMIE_MOVEMENT_BOUNDS.size.y >= 650.0, "Layout A must preserve broad Lumie vertical roaming")
 	for item_id in RoomLayout.FURNITURE_RECTS.keys():
 		var rect: Rect2 = RoomLayout.get_furniture_rect(String(item_id))
 		_check(RoomLayout.is_rect_inside_reference(rect), "%s layout rect must remain inside reference viewport" % String(item_id))
+
+	_check(FurnitureVisualContract.get_asset_size("wooden_rack") == Vector2i(320, 420), "Wooden Rack asset contract must remain 320x420")
+	_check(FurnitureVisualContract.get_asset_size("curtain") == Vector2i(360, 260), "Curtain asset contract must remain 360x260")
+	_check(FurnitureVisualContract.get_asset_size("small_table") == Vector2i(300, 300), "Small Table asset contract must remain 300x300")
+	_check(FurnitureVisualContract.has_complete_progression("wooden_rack"), "Wooden Rack must define Lv1-Lv5 visual progression")
+	_check(FurnitureVisualContract.has_complete_progression("curtain"), "Curtain must define Lv1-Lv5 visual progression")
+	_check(FurnitureVisualContract.has_complete_progression("small_table"), "Small Table must define Lv1-Lv5 visual progression")
+	_check(FurnitureVisualContract.SMALL_TABLE_POT_CLEARANCE_DIAMETER >= 160, "Small Table Lv4/Lv5 must keep Little Pot clearance")
 
 	var layout_overlay_scene := load("res://game/scenes/debug/layout_calibration_overlay.tscn")
 	_check(layout_overlay_scene != null, "Layout calibration overlay should load")
@@ -69,6 +80,15 @@ func _run() -> void:
 		_check(main_room_instance != null, "MainRoom scene should instantiate")
 		if main_room_instance != null:
 			_check(main_room_instance.has_node("Overlay/LayoutCalibrationOverlay"), "MainRoom should include layout calibration overlay")
+			_check(main_room_instance.has_node("UI/ResourceUI/Petals"), "MainRoom should keep top-left Petals display")
+			_check(main_room_instance.has_node("UI/ResourceUI/Income"), "MainRoom should keep top-left Income display")
+			_check(main_room_instance.has_node("UI/ResourceUI/Comfort"), "MainRoom should keep top-left Comfort display")
+			_check(main_room_instance.has_node("UI/ResourceUI/OfflineCap"), "MainRoom should keep top-left Offline Limit display")
+			_check(main_room_instance.has_node("UI/SaveButton"), "MainRoom should keep Save control")
+			_check(main_room_instance.has_node("UI/OfflineBoostButton"), "MainRoom should keep Offline Boost control")
+			_check(main_room_instance.has_node("UI/ShopButton"), "MainRoom should keep Shop control")
+			_check(main_room_instance.has_node("UI/SettingsButton"), "MainRoom should keep Settings control")
+			_check(main_room_instance.has_node("UI/PhotoButton"), "MainRoom should keep Photo Mode control")
 			main_room_instance.queue_free()
 
 	SaveService.reset_progress()
