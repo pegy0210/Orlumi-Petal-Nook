@@ -38,6 +38,8 @@ for card in ("LittlePotCard", "WoodenRackCard", "CurtainCard", "SmallTableCard")
     require(shop, f'[node name="{card}" type="Panel" parent="Content/Grid"]', f"Shop missing {card}")
 
 require(theme, 'Button/styles/normal = SubResource("StyleBox_button_normal")', "Theme missing normal button style")
+require(theme, 'Button/styles/disabled = SubResource("StyleBox_button_disabled")', "Theme missing disabled button style")
+require(theme, 'Button/colors/font_disabled_color', "Theme missing disabled button text treatment")
 require(theme, 'Panel/styles/panel = SubResource("StyleBox_panel")', "Theme missing panel style")
 require(theme, "corner_radius_top_left = 24", "Panel theme must keep soft rounded corners")
 
