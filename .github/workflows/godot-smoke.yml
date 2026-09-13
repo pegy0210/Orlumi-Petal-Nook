@@ -22,6 +22,9 @@ jobs:
       - name: Validate production asset contracts
         run: python3 tools/validate_assets.py
 
+      - name: Validate UI contract
+        run: python3 tools/validate_ui_contract.py
+
       - name: Validate Android packaging contract
         run: python3 tools/validate_packaging.py
 
