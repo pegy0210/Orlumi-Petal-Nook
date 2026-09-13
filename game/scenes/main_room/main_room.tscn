@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/main_room/main_room.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/story_overlay.tscn" id="2_story"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://game/scenes/ui/photo_mode_ui.tscn" id="6_photo"]
 [ext_resource type="PackedScene" path="res://game/scenes/visuals/furniture_visual.tscn" id="7_furniture"]
 [ext_resource type="PackedScene" path="res://game/scenes/debug/layout_calibration_overlay.tscn" id="8_layout_debug"]
+[ext_resource type="Theme" path="res://game/data/petal_nook_theme.tres" id="9_theme"]
 
 [node name="MainRoom" type="Control"]
 layout_mode = 3
@@ -16,6 +17,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("9_theme")
 script = ExtResource("1_main")
 
 [node name="Base" type="Control" parent="."]
