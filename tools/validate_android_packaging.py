@@ -46,14 +46,23 @@ def main() -> int:
         'architectures/arm64-v8a=true': "arm64 ABI",
         'architectures/x86=false': "x86 disabled",
         'architectures/x86_64=false': "x86_64 disabled",
-        'gradle_build/min_sdk="23"': "minimum SDK 23",
-        'gradle_build/target_sdk="35"': "target SDK 35",
+        'gradle_build/use_gradle_build=false': "non-Gradle debug export mode",
         'version/code=1': "version code",
         'version/name="0.8.0"': "version name",
     }
     for needle, label in export_checks.items():
         if needle not in export_text:
             failures.append(f"export_presets.cfg missing {label}: {needle}")
+
+    forbidden_overrides = [
+        'gradle_build/min_sdk=',
+        'gradle_build/target_sdk=',
+    ]
+    for needle in forbidden_overrides:
+        if needle in export_text:
+            failures.append(
+                f"export_presets.cfg contains {needle}; SDK overrides require Gradle build in Godot 4.3"
+            )
 
     if failures:
         for message in failures:
