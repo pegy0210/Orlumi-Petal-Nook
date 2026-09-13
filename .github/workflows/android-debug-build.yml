@@ -86,7 +86,11 @@ jobs:
           set -o pipefail
           ./godot --headless --path . --export-debug "Android" build/android/Orlumi-Petal-Nook.apk 2>&1 | tee godot-android-export.log
           test -s build/android/Orlumi-Petal-Nook.apk
-          ! grep -q "ERROR:" godot-android-export.log
+          # Godot 4.3 emits a non-fatal ERROR-level message when no custom project icon is set,
+          # but still creates, signs and verifies the APK. Ignore only that known message;
+          # any other ERROR remains a hard failure.
+          grep "ERROR:" godot-android-export.log | grep -v "No project icon specified" > godot-android-unexpected-errors.log || true
+          test ! -s godot-android-unexpected-errors.log
 
       - name: Record APK checksum
         run: sha256sum build/android/Orlumi-Petal-Nook.apk | tee build/android/Orlumi-Petal-Nook.apk.sha256
