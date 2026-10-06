@@ -34,8 +34,12 @@ for node_name in ("SaveButton", "OfflineBoostButton", "ShopButton", "SettingsBut
 
 require(shop, '[node name="Grid" type="GridContainer" parent="Content"]', "Shop must use GridContainer")
 require(shop, "columns = 2", "Shop must remain a 2-column grid")
+require(shop, '[sub_resource type="StyleBoxFlat" id="StyleBox_shop_shell"]', "Shop must keep a dedicated shell style")
+require(shop, '[sub_resource type="StyleBoxFlat" id="StyleBox_shop_card"]', "Shop cards must keep a dedicated visual style")
+require(shop, 'theme_override_styles/panel = SubResource("StyleBox_shop_shell")', "Shop shell style must be applied")
 for card in ("LittlePotCard", "WoodenRackCard", "CurtainCard", "SmallTableCard"):
     require(shop, f'[node name="{card}" type="Panel" parent="Content/Grid"]', f"Shop missing {card}")
+require(shop, 'theme_override_colors/font_color = Color(0.67451, 0.541176, 0.321569, 1)', "Shop price treatment must retain pale-gold hierarchy")
 
 require(theme, 'Button/styles/normal = SubResource("StyleBox_button_normal")', "Theme missing normal button style")
 require(theme, 'Button/styles/disabled = SubResource("StyleBox_button_disabled")', "Theme missing disabled button style")
