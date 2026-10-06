@@ -1,6 +1,46 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/ui/settings_panel.gd" id="1_settings"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_settings_shell"]
+bg_color = Color(0.984314, 0.960784, 0.921569, 0.985)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85098, 0.776471, 0.662745, 0.92)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.352941, 0.254902, 0.176471, 0.16)
+shadow_size = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_confirm_panel"]
+bg_color = Color(1, 0.980392, 0.94902, 0.985)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.894118, 0.827451, 0.721569, 0.95)
+corner_radius_top_left = 22
+corner_radius_top_right = 22
+corner_radius_bottom_right = 22
+corner_radius_bottom_left = 22
+shadow_color = Color(0.352941, 0.254902, 0.176471, 0.14)
+shadow_size = 7
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_reset_button"]
+bg_color = Color(0.968627, 0.886275, 0.866667, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.831373, 0.658824, 0.627451, 0.95)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="SettingsPanel" type="Panel"]
 visible = false
@@ -9,6 +49,7 @@ offset_left = 130.0
 offset_top = 480.0
 offset_right = 950.0
 offset_bottom = 1420.0
+theme_override_styles/panel = SubResource("StyleBox_settings_shell")
 script = ExtResource("1_settings")
 
 [node name="Content" type="Control" parent="."]
@@ -32,6 +73,7 @@ offset_left = 0.0
 offset_top = 0.0
 offset_right = 420.0
 offset_bottom = 60.0
+theme_override_colors/font_color = Color(0.376471, 0.294118, 0.235294, 1)
 theme_override_font_sizes/font_size = 34
 text = "Settings"
 
@@ -50,6 +92,7 @@ offset_left = 55.0
 offset_top = 190.0
 offset_right = 765.0
 offset_bottom = 300.0
+theme_override_colors/font_color = Color(0.529412, 0.435294, 0.352941, 1)
 theme_override_font_sizes/font_size = 23
 text = "Restart your nook from the beginning.\nPermanent paid content will be kept."
 autowrap_mode = 2
@@ -60,6 +103,8 @@ offset_left = 180.0
 offset_top = 350.0
 offset_right = 640.0
 offset_bottom = 440.0
+theme_override_colors/font_color = Color(0.470588, 0.262745, 0.243137, 1)
+theme_override_styles/normal = SubResource("StyleBox_reset_button")
 theme_override_font_sizes/font_size = 26
 text = "Reset Game"
 
@@ -70,6 +115,7 @@ offset_left = 65.0
 offset_top = 210.0
 offset_right = 755.0
 offset_bottom = 660.0
+theme_override_styles/panel = SubResource("StyleBox_confirm_panel")
 
 [node name="Message" type="Label" parent="FirstConfirm"]
 layout_mode = 0
@@ -77,6 +123,7 @@ offset_left = 45.0
 offset_top = 55.0
 offset_right = 645.0
 offset_bottom = 195.0
+theme_override_colors/font_color = Color(0.431373, 0.345098, 0.282353, 1)
 theme_override_font_sizes/font_size = 25
 text = "Restart your nook?\nYour current progress will be cleared."
 horizontal_alignment = 1
@@ -107,6 +154,7 @@ offset_left = 65.0
 offset_top = 210.0
 offset_right = 755.0
 offset_bottom = 660.0
+theme_override_styles/panel = SubResource("StyleBox_confirm_panel")
 
 [node name="Message" type="Label" parent="FinalConfirm"]
 layout_mode = 0
@@ -114,6 +162,7 @@ offset_left = 45.0
 offset_top = 55.0
 offset_right = 645.0
 offset_bottom = 195.0
+theme_override_colors/font_color = Color(0.431373, 0.345098, 0.282353, 1)
 theme_override_font_sizes/font_size = 25
 text = "Are you sure?\nThis cannot be undone."
 horizontal_alignment = 1
@@ -134,5 +183,7 @@ offset_left = 400.0
 offset_top = 270.0
 offset_right = 620.0
 offset_bottom = 350.0
+theme_override_colors/font_color = Color(0.470588, 0.262745, 0.243137, 1)
+theme_override_styles/normal = SubResource("StyleBox_reset_button")
 theme_override_font_sizes/font_size = 23
 text = "Reset"
