@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/main_room/main_room.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://game/scenes/ui/story_overlay.tscn" id="2_story"]
@@ -9,6 +9,20 @@
 [ext_resource type="PackedScene" path="res://game/scenes/visuals/furniture_visual.tscn" id="7_furniture"]
 [ext_resource type="PackedScene" path="res://game/scenes/debug/layout_calibration_overlay.tscn" id="8_layout_debug"]
 [ext_resource type="Theme" path="res://game/data/petal_nook_theme.tres" id="9_theme"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_offline_popup"]
+bg_color = Color(0.992157, 0.972549, 0.937255, 0.985)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.882353, 0.803922, 0.67451, 0.95)
+corner_radius_top_left = 26
+corner_radius_top_right = 26
+corner_radius_bottom_right = 26
+corner_radius_bottom_left = 26
+shadow_color = Color(0.352941, 0.254902, 0.176471, 0.15)
+shadow_size = 9
 
 [node name="MainRoom" type="Control"]
 layout_mode = 3
@@ -241,6 +255,7 @@ offset_left = 150.0
 offset_top = 650.0
 offset_right = 930.0
 offset_bottom = 1070.0
+theme_override_styles/panel = SubResource("StyleBox_offline_popup")
 
 [node name="Title" type="Label" parent="Overlay/OfflinePopup"]
 layout_mode = 0
@@ -248,6 +263,7 @@ offset_left = 50.0
 offset_top = 45.0
 offset_right = 730.0
 offset_bottom = 100.0
+theme_override_colors/font_color = Color(0.376471, 0.294118, 0.235294, 1)
 theme_override_font_sizes/font_size = 30
 text = "Welcome back"
 horizontal_alignment = 1
@@ -258,6 +274,7 @@ offset_left = 50.0
 offset_top = 145.0
 offset_right = 730.0
 offset_bottom = 235.0
+theme_override_colors/font_color = Color(0.67451, 0.541176, 0.321569, 1)
 theme_override_font_sizes/font_size = 24
 text = "Offline reward"
 horizontal_alignment = 1
