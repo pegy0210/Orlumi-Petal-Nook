@@ -1,0 +1,32 @@
+name: Final Art Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: Production art batch to require
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+
+permissions:
+  contents: read
+
+jobs:
+  final-art-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate PNG contracts
+        run: python3 tools/validate_assets.py
+
+      - name: Require selected production batch
+        run: python3 tools/validate_final_art_gate.py "${{ inputs.batch }}"
