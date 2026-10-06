@@ -1,6 +1,32 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://game/scripts/ui/photo_mode_ui.gd" id="1_photo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_capture"]
+bg_color = Color(0.980392, 0.945098, 0.890196, 0.96)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.862745, 0.756863, 0.584314, 0.95)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0.352941, 0.254902, 0.176471, 0.14)
+shadow_size = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_exit"]
+bg_color = Color(0.984314, 0.960784, 0.921569, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85098, 0.776471, 0.662745, 0.85)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
 
 [node name="PhotoModeUI" type="Control"]
 visible = false
@@ -30,7 +56,7 @@ offset_left = 280.0
 offset_top = 70.0
 offset_right = 800.0
 offset_bottom = 145.0
-theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 1)
+theme_override_colors/font_color = Color(0.427451, 0.341176, 0.27451, 0.92)
 theme_override_font_sizes/font_size = 30
 text = "Orlumi: Petal Nook"
 horizontal_alignment = 1
@@ -42,6 +68,8 @@ offset_left = 410.0
 offset_top = 1680.0
 offset_right = 670.0
 offset_bottom = 1785.0
+theme_override_colors/font_color = Color(0.376471, 0.294118, 0.235294, 1)
+theme_override_styles/normal = SubResource("StyleBox_capture")
 theme_override_font_sizes/font_size = 28
 text = "Capture"
 
@@ -51,5 +79,7 @@ offset_left = 815.0
 offset_top = 1690.0
 offset_right = 1010.0
 offset_bottom = 1775.0
+theme_override_colors/font_color = Color(0.498039, 0.403922, 0.321569, 1)
+theme_override_styles/normal = SubResource("StyleBox_exit")
 theme_override_font_sizes/font_size = 24
 text = "Exit"
